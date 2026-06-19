@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>SEAWING DEALS - Best Deals Online</title>
+  <link rel="stylesheet" href="style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<button class="theme-toggle" onclick="toggleTheme()">🌓 Dark/Light</button>
+
+<div class="header">
+  <h1>🛍️SEAWING DEALS</h1>
+  <p>Discover amazing products at best prices</p>
+</div>
+
+<div class="search-container">
+  <input id="search" placeholder="🔍 Search products...">
+</div>
+
+<div class="cats">
+  <button onclick="filterCat('all')" class="active">All</button>
+  <button onclick="filterCat('men')">👔 Men</button>
+  <button onclick="filterCat('women')">💄 Women</button>
+  <button onclick="filterCat('kids')">🧸 Kids</button>
+</div>
+
+<div id="products"></div>
+
+<footer>
+  Powered By <a href="https://t.me/+4s4mTS5NRi02M2E1" target="_blank">XBI | Join Now</a>
+</footer>
+
+<a href="https://t.me/+4s4mTS5NRi02M2E1" class="telegram-btn" target="_blank">📱</a>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<script src="app.js"></script>
+<script src="notifications.js"></script>
+
+</body>
+</html>

@@ -24,7 +24,7 @@ async function loadProducts() {
     display(allProducts);
     setTimeout(() => {
       scrollToFolder(returnToFolder);
-    }, 300);
+    }, 400);
   } else {
     display(allProducts);
   }
@@ -39,11 +39,17 @@ function scrollToFolder(folderId) {
     if (button) {
       const onclickAttr = button.getAttribute('onclick');
       if (onclickAttr && onclickAttr.includes(folderId)) {
+        // Scroll to card with smooth behavior
         card.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        card.style.transition = 'all 0.3s ease';
-        card.style.boxShadow = '0 0 0 3px #667eea, 0 8px 30px rgba(102,126,234,0.4)';
+        
+        // Highlight effect
+        card.style.transition = 'all 0.5s ease';
+        card.style.boxShadow = '0 0 0 4px #667eea, 0 8px 30px rgba(102,126,234,0.5)';
+        card.style.transform = 'scale(1.02)';
+        
         setTimeout(() => {
           card.style.boxShadow = '';
+          card.style.transform = '';
         }, 3000);
         break;
       }

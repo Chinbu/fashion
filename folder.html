@@ -194,7 +194,7 @@
       
       productsHTML += `
         <div class="card" style="animation: fadeIn 0.3s ease;">
-          ${fp.image ? `<img src="${fp.image}" alt="${fp.title}" loading="lazy" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22200%22 height=%22200%22%3E%3Crect width=%22200%22 height=%22200%22 fill=%22%23e0e0e0%22/%3E%3Ctext x=%2250%%22 y=%2250%%22 text-anchor=%22middle%22 dy=%22.3em%22 font-size=%2250%22 fill=%22%23999%22%3E📷%3C/text%3E%3C/svg%3E'">` : `<div style="width:100%;height:200px;background:#e0e0e0;display:flex;align-items:center;justify-content:center;font-size:60px;">📷</div>`}
+          ${fp.image ? `<img src="${fp.image}" alt="${fp.title}" loading="lazy" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22300%22 height=%22300%22%3E%3Crect width=%22300%22 height=%22300%22 fill=%22%23e0e0e0%22/%3E%3Ctext x=%2250%%22 y=%2250%%22 text-anchor=%22middle%22 dy=%22.3em%22 font-size=%2250%22 fill=%22%23999%22%3E📷%3C/text%3E%3C/svg%3E'">` : `<div style="width:100%;height:300px;background:#e0e0e0;display:flex;align-items:center;justify-content:center;font-size:60px;">📷</div>`}
           <h3>${index + 1}. ${escapeHtml(fp.title)}</h3>
           <div class="product-buttons">
             ${buttonsHTML}
@@ -205,24 +205,20 @@
     
     container.innerHTML = `
       <div style="max-width:1400px; margin:0 auto;">
-        <!-- Back Button -->
         <button onclick="goBackToIndex()" style="background:#667eea;color:white;padding:10px 25px;border:none;border-radius:8px;cursor:pointer;font-weight:600;margin-bottom:20px;transition:transform 0.2s;font-size:14px;" 
            onmouseover="this.style.transform='translateY(-2px)'" 
            onmouseout="this.style.transform='translateY(0)'">← Back to Home</button>
         
-        <!-- Header - Same as Index -->
         <div style="background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);padding:30px 20px;border-radius:20px;margin:0 0 20px 0;text-align:center;color:white;box-shadow:0 10px 30px rgba(0,0,0,0.1);">
           <h1 style="margin:0;font-size:2.5rem;">📁 ${escapeHtml(folder.title)}</h1>
           <p style="margin-top:10px;">${folderProducts.length} products available in this collection</p>
         </div>
         
-        <!-- Product Count Badge -->
         <div style="text-align:center;margin-bottom:20px;padding:12px;background:rgba(102,126,234,0.1);border-radius:50px;font-size:14px;color:#667eea;font-weight:600;">
           📂 Showing ${folderProducts.length} products
         </div>
         
-        <!-- Products Grid - Same as Index -->
-        <div id="products" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:25px;padding:20px 0;">
+        <div id="products" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:30px;padding:20px 0;">
           ${productsHTML}
         </div>
       </div>
@@ -254,13 +250,11 @@
     }
   }
 
-  // ============ Apply Theme ============
   const savedTheme = localStorage.getItem('theme');
   if(savedTheme === 'dark') {
     document.body.classList.add('dark');
   }
 
-  // ============ Load Folder ============
   loadFolder();
 </script>
 

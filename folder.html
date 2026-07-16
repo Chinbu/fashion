@@ -87,7 +87,6 @@
     const isDark = document.body.classList.contains('dark');
     localStorage.setItem('theme', isDark ? 'dark' : 'light');
     
-    // Re-render to apply theme
     const folderId = localStorage.getItem('folderToOpen');
     if (folderId) {
       loadFolder();
@@ -96,19 +95,17 @@
 
   // ============ Go Back to Index with State ============
   function goBackToIndex() {
-    // Store the folder ID to scroll to it
     const folderId = localStorage.getItem('folderToOpen');
     if (folderId) {
       sessionStorage.setItem('returnToFolder', folderId);
     }
     
-    // Store current category
     const savedCategory = sessionStorage.getItem('currentCategory');
     if (savedCategory) {
       sessionStorage.setItem('currentCategory', savedCategory);
     }
     
-    // Close this window/tab and go back
+    // Go back to index page in same tab
     window.location.href = 'index.html';
   }
 
@@ -121,7 +118,7 @@
       container.innerHTML = `
         <div style="text-align:center;padding:50px;background:white;border-radius:20px;box-shadow:0 10px 40px rgba(0,0,0,0.1);">
           <h2>❌ No folder selected</h2>
-          <p><a href="index.html" style="color:#667eea;text-decoration:none;font-weight:600;">← Go back to home</a></p>
+          <p><button onclick="goBackToIndex()" style="background:#667eea;color:white;padding:10px 25px;border:none;border-radius:8px;cursor:pointer;font-weight:600;">← Go back to home</button></p>
         </div>
       `;
       return;
@@ -139,7 +136,7 @@
           <div style="text-align:center;padding:50px;background:white;border-radius:20px;box-shadow:0 10px 40px rgba(0,0,0,0.1);">
             <h2>❌ Folder not found</h2>
             <p>The folder you are looking for does not exist.</p>
-            <p><a href="index.html" style="color:#667eea;text-decoration:none;font-weight:600;">← Go back to home</a></p>
+            <p><button onclick="goBackToIndex()" style="background:#667eea;color:white;padding:10px 25px;border:none;border-radius:8px;cursor:pointer;font-weight:600;">← Go back to home</button></p>
           </div>
         `;
         return;
@@ -152,7 +149,7 @@
         <div style="text-align:center;padding:50px;background:white;border-radius:20px;box-shadow:0 10px 40px rgba(0,0,0,0.1);">
           <h2>❌ Error loading folder</h2>
           <p>${error.message}</p>
-          <p><a href="index.html" style="color:#667eea;text-decoration:none;font-weight:600;">← Go back to home</a></p>
+          <p><button onclick="goBackToIndex()" style="background:#667eea;color:white;padding:10px 25px;border:none;border-radius:8px;cursor:pointer;font-weight:600;">← Go back to home</button></p>
         </div>
       `;
     }
@@ -180,13 +177,11 @@
       return;
     }
     
-    // Build products grid - same as index page design
     let productsHTML = '';
     
     folderProducts.forEach((fp, index) => {
       let links = fp.links || [];
       
-      // Build platform buttons
       let buttonsHTML = links.map(link => {
         const platform = link.platform || detectPlatformFromUrl(link.url) || 'Other';
         const platformKey = platform.toLowerCase();
@@ -233,7 +228,6 @@
       </div>
     `;
     
-    // Add fadeIn animation if not exists
     if (!document.getElementById('folderStyles')) {
       const style = document.createElement('style');
       style.id = 'folderStyles';

@@ -21,7 +21,6 @@ async function loadProducts() {
   const returnToFolder = sessionStorage.getItem('returnToFolder');
   if (returnToFolder) {
     sessionStorage.removeItem('returnToFolder');
-    // Wait for display to complete then scroll to folder
     display(allProducts);
     setTimeout(() => {
       scrollToFolder(returnToFolder);
@@ -34,7 +33,6 @@ async function loadProducts() {
 }
 
 function scrollToFolder(folderId) {
-  // Find the folder card and scroll to it
   const cards = document.querySelectorAll('.card.folder-card');
   for (let card of cards) {
     const button = card.querySelector('button[onclick*="openFolderPage"]');
@@ -42,7 +40,6 @@ function scrollToFolder(folderId) {
       const onclickAttr = button.getAttribute('onclick');
       if (onclickAttr && onclickAttr.includes(folderId)) {
         card.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        // Highlight the folder card
         card.style.transition = 'all 0.3s ease';
         card.style.boxShadow = '0 0 0 3px #667eea, 0 8px 30px rgba(102,126,234,0.4)';
         setTimeout(() => {
@@ -120,7 +117,6 @@ function display(products) {
     const isFolder = p.product_type === 'folder';
     const folderProducts = p.folder_products || [];
     
-    // Get links - support both old and new format
     let links = p.links || [];
     if (links.length === 0 && !isFolder) {
       const oldLinks = [];
@@ -131,7 +127,6 @@ function display(products) {
     }
     
     if (isFolder) {
-      // Display as folder card - NO VIEWS on public site
       box.innerHTML += `
         <div class="card folder-card" data-folder-id="${p.id}">
           <img src="${p.thumbnail}" alt="${p.title}" loading="lazy">
@@ -143,7 +138,6 @@ function display(products) {
         </div>
       `;
     } else {
-      // Display as single product card - NO VIEWS on public site
       box.innerHTML += `
         <div class="card">
           <img src="${p.thumbnail}" alt="${p.title}" loading="lazy">
@@ -165,9 +159,9 @@ function display(products) {
   });
 }
 
-// Open folder in new page
+// Open folder in same tab
 function openFolderPage(folderId) {
-  console.log("Opening folder page with ID:", folderId);
+  console.log("Opening folder with ID:", folderId);
   
   // Store folder ID in localStorage
   localStorage.setItem('folderToOpen', folderId);
@@ -176,8 +170,8 @@ function openFolderPage(folderId) {
   sessionStorage.setItem('currentCategory', currentCategory);
   sessionStorage.setItem('scrollPosition', window.scrollY);
   
-  // Open new page
-  window.open('folder.html', '_blank');
+  // Redirect to folder page in same tab
+  window.location.href = 'folder.html';
 }
 
 function escapeHtml(str) {
@@ -192,12 +186,10 @@ function escapeHtml(str) {
 
 async function trackClick(id, link, platform) {
   try {
-    // Increment total clicks using Supabase RPC
     await supabaseClient.rpc("increment_clicks", {
       product_id: id
     });
     
-    // Update local data
     const product = allProducts.find(p => p.id === id);
     if(product) {
       product.clicks = (product.clicks || 0) + 1;
@@ -207,18 +199,15 @@ async function trackClick(id, link, platform) {
     console.error("Error tracking click:", e);
   }
   
-  // Open link in new tab
   window.open(link, "_blank");
 }
 
-// Search functionality
 document.getElementById("search")?.addEventListener("input", e => {
   let val = e.target.value.toLowerCase();
   let filtered = allProducts.filter(p => p.title.toLowerCase().includes(val));
   display(filtered);
 });
 
-// Category filter
 function filterCat(cat) {
   currentCategory = cat;
   
@@ -236,7 +225,6 @@ function filterCat(cat) {
   }
 }
 
-// Theme functions
 function initTheme() {
   const savedTheme = localStorage.getItem('theme');
   if(savedTheme === 'dark') {
@@ -254,11 +242,9 @@ function toggleTheme() {
 function checkReturnFromFolder() {
   const returnToFolder = sessionStorage.getItem('returnToFolder');
   if (returnToFolder) {
-    // Restore category
     const savedCategory = sessionStorage.getItem('currentCategory');
     if (savedCategory) {
       currentCategory = savedCategory;
-      // Update active category button
       document.querySelectorAll('.cats button').forEach(btn => {
         btn.classList.remove('active');
         if(btn.textContent.toLowerCase() === savedCategory || (savedCategory === 'all' && btn.textContent === 'All')) {
@@ -271,28 +257,16 @@ function checkReturnFromFolder() {
   return false;
 }
 
-// Load products when page loads
 document.addEventListener('DOMContentLoaded', function() {
-  // Check if we're returning from folder
   const isReturning = checkReturnFromFolder();
-  
-  if (isReturning) {
-    // Products will be loaded and scrolled in loadProducts
-    loadProducts();
-  } else {
-    loadProducts();
-  }
-  
+  loadProducts();
   initTheme();
 });
 
-// Handle visibility change (when user comes back to tab)
 document.addEventListener('visibilitychange', function() {
   if (!document.hidden) {
-    // Check if returning from folder
     const returnToFolder = sessionStorage.getItem('returnToFolder');
     if (returnToFolder) {
-      // Products will be reloaded and scrolled
       loadProducts();
     }
   }

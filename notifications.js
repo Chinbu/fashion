@@ -61,7 +61,7 @@ function showNotification() {
       box.remove();
       if(activePopup === box) activePopup = null;
     }
-  }, 8000);
+  }, 5000);
 }
 
 // Show first notification after 5 seconds

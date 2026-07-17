@@ -19,7 +19,6 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="config.js"></script>
 <script>
-  // ============ Platform Detection Functions ============
   const platformCache = new Map();
 
   function detectPlatformFromUrlAdvanced(url) {
@@ -72,24 +71,12 @@
 
   function getPlatformColor(platform) {
     const colors = {
-      'Amazon': '#ff9900',
-      'Flipkart': '#2874f0',
-      'Meesho': '#e91e63',
-      'Myntra': '#e62e4a',
-      'Shopsy': '#ff6b35',
-      'Ajio': '#ff9900',
-      'Nykaa': '#f15a6c',
-      'Tata Cliq': '#4a8bff',
-      'Snapdeal': '#ff6600',
-      'Paytm Mall': '#00baf2',
-      'ShopClues': '#f36f21',
-      'Limeroad': '#ff0066',
-      'Croma': '#e31837',
-      'Reliance': '#1a8f5e',
-      'Pepperfry': '#ff6b00',
-      'Urban Ladder': '#1a8f5e',
-      'FirstCry': '#ff6b6b',
-      'BabyChakra': '#ff6b9d',
+      'Amazon': '#ff9900', 'Flipkart': '#2874f0', 'Meesho': '#e91e63',
+      'Myntra': '#e62e4a', 'Shopsy': '#ff6b35', 'Ajio': '#ff9900',
+      'Nykaa': '#f15a6c', 'Tata Cliq': '#4a8bff', 'Snapdeal': '#ff6600',
+      'Paytm Mall': '#00baf2', 'ShopClues': '#f36f21', 'Limeroad': '#ff0066',
+      'Croma': '#e31837', 'Reliance': '#1a8f5e', 'Pepperfry': '#ff6b00',
+      'Urban Ladder': '#1a8f5e', 'FirstCry': '#ff6b6b', 'BabyChakra': '#ff6b9d',
       'Other': '#667eea'
     };
     return colors[platform] || '#667eea';
@@ -97,25 +84,11 @@
 
   function getPlatformIcon(platform) {
     const icons = {
-      'Amazon': '🛒',
-      'Flipkart': '🛍️',
-      'Meesho': '✨',
-      'Myntra': '👗',
-      'Shopsy': '🛍️',
-      'Ajio': '👕',
-      'Nykaa': '💄',
-      'Tata Cliq': '🛒',
-      'Snapdeal': '🛒',
-      'Paytm Mall': '🛍️',
-      'ShopClues': '🛒',
-      'Limeroad': '👗',
-      'Croma': '🛒',
-      'Reliance': '🛍️',
-      'Pepperfry': '🛋️',
-      'Urban Ladder': '🛋️',
-      'FirstCry': '🧸',
-      'BabyChakra': '🧸',
-      'Other': '🔗'
+      'Amazon': '🛒', 'Flipkart': '🛍️', 'Meesho': '✨', 'Myntra': '👗',
+      'Shopsy': '🛍️', 'Ajio': '👕', 'Nykaa': '💄', 'Tata Cliq': '🛒',
+      'Snapdeal': '🛒', 'Paytm Mall': '🛍️', 'ShopClues': '🛒', 'Limeroad': '👗',
+      'Croma': '🛒', 'Reliance': '🛍️', 'Pepperfry': '🛋️', 'Urban Ladder': '🛋️',
+      'FirstCry': '🧸', 'BabyChakra': '🧸', 'Other': '🔗'
     };
     return icons[platform] || '🔗';
   }
@@ -130,7 +103,6 @@
     });
   }
 
-  // ============ Theme Functions ============
   function toggleTheme() {
     document.body.classList.toggle('dark');
     const isDark = document.body.classList.contains('dark');
@@ -150,12 +122,14 @@
     }
   }
 
-  // ============ Go Back to Index with State ============
+  // ============ Go Back to Root URL (Not index.html) ============
   function goBackToIndex() {
     const folderId = localStorage.getItem('folderToOpen') || sessionStorage.getItem('folderToOpen');
+    
     if (folderId) {
-      // Store returnToFolder for scrolling back
+      // Store the specific folder ID for scrolling back
       sessionStorage.setItem('returnToFolder', folderId);
+      console.log("Going back to folder:", folderId);
     }
     
     const savedCategory = sessionStorage.getItem('currentCategory');
@@ -163,7 +137,8 @@
       sessionStorage.setItem('currentCategory', savedCategory);
     }
     
-    window.location.href = 'https://seawing-deals.vercel.app';
+    // Go to root URL instead of index.html
+    window.location.href = '/';
   }
 
   // ============ Load Folder Data with Cache ============

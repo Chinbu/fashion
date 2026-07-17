@@ -19,13 +19,12 @@ async function loadProducts() {
       displayOptimized(allProducts);
       isLoading = false;
       
-      // Check if returning from folder and scroll
       const returnToFolder = sessionStorage.getItem('returnToFolder');
       if (returnToFolder) {
         setTimeout(() => {
-          scrollToFolder(returnToFolder);
+          scrollToSpecificFolder(returnToFolder);
           sessionStorage.removeItem('returnToFolder');
-        }, 500);
+        }, 600);
       }
       
       refreshProductsInBackground();
@@ -49,9 +48,9 @@ async function loadProducts() {
     if (returnToFolder) {
       displayOptimized(allProducts);
       setTimeout(() => {
-        scrollToFolder(returnToFolder);
+        scrollToSpecificFolder(returnToFolder);
         sessionStorage.removeItem('returnToFolder');
-      }, 500);
+      }, 600);
     } else {
       displayOptimized(allProducts);
     }
@@ -315,97 +314,135 @@ function getPlatformIcon(platform) {
     return icons[platform] || '🔗';
 }
 
-// ============ Scroll to Folder with Highlight ============
-function scrollToFolder(folderId) {
-  console.log("Scrolling to folder:", folderId);
+function scrollToSpecificFolder(folderId) {
+  console.log("Scrolling to specific folder ID:", folderId);
   
-  // Find all folder cards
+  if (!folderId) {
+    console.log("No folder ID provided");
+    return;
+  }
+  
   const cards = document.querySelectorAll('.card.folder-card');
+  console.log("Found folder cards:", cards.length);
+  
   let found = false;
+  let targetCard = null;
   
   for (let card of cards) {
-    const folderIdAttr = card.getAttribute('data-folder-id');
-    if (folderIdAttr === folderId) {
+    const cardFolderId = card.getAttribute('data-folder-id');
+    console.log("Card folder ID:", cardFolderId);
+    if (cardFolderId === folderId) {
+      targetCard = card;
       found = true;
-      console.log("Found folder card, scrolling...");
-      
-      // Smooth scroll to card
-      card.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      
-      // Highlight effect with animation
-      card.style.transition = 'all 0.8s ease';
-      card.style.boxShadow = '0 0 0 4px #667eea, 0 8px 40px rgba(102,126,234,0.6)';
-      card.style.transform = 'scale(1.03)';
-      card.style.borderColor = '#667eea';
-      card.style.borderWidth = '3px';
-      
-      // Flash effect
-      let flashCount = 0;
-      const flashInterval = setInterval(() => {
-        if (flashCount % 2 === 0) {
-          card.style.backgroundColor = 'rgba(102,126,234,0.15)';
-        } else {
-          card.style.backgroundColor = '';
-        }
-        flashCount++;
-        if (flashCount > 5) {
-          clearInterval(flashInterval);
-          card.style.backgroundColor = '';
-        }
-      }, 300);
-      
-      // Reset after 4 seconds
-      setTimeout(() => {
-        card.style.boxShadow = '';
-        card.style.transform = '';
-        card.style.borderColor = '';
-        card.style.borderWidth = '';
-      }, 4000);
-      
+      console.log("Found folder card by data attribute");
       break;
     }
   }
   
   if (!found) {
-    console.log("Folder card not found, trying again after delay...");
-    // Try again after a short delay (for cases where cards haven't rendered yet)
+    for (let card of cards) {
+      const button = card.querySelector('button[onclick*="openFolderPage"]');
+      if (button) {
+        const onclickAttr = button.getAttribute('onclick');
+        if (onclickAttr && onclickAttr.includes(folderId)) {
+          targetCard = card;
+          found = true;
+          console.log("Found folder card by button onclick");
+          break;
+        }
+      }
+    }
+  }
+  
+  if (found && targetCard) {
+    console.log("Scrolling to folder card");
+    
+    targetCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    
+    targetCard.style.transition = 'all 0.8s ease';
+    targetCard.style.boxShadow = '0 0 0 4px #667eea, 0 8px 40px rgba(102,126,234,0.7)';
+    targetCard.style.transform = 'scale(1.03)';
+    targetCard.style.borderColor = '#667eea';
+    targetCard.style.borderWidth = '3px';
+    targetCard.style.zIndex = '100';
+    
+    let flashCount = 0;
+    const flashInterval = setInterval(() => {
+      if (flashCount % 2 === 0) {
+        targetCard.style.backgroundColor = 'rgba(102,126,234,0.15)';
+        targetCard.style.boxShadow = '0 0 0 6px #667eea, 0 8px 50px rgba(102,126,234,0.8)';
+      } else {
+        targetCard.style.backgroundColor = '';
+        targetCard.style.boxShadow = '0 0 0 4px #667eea, 0 8px 40px rgba(102,126,234,0.7)';
+      }
+      flashCount++;
+      if (flashCount > 6) {
+        clearInterval(flashInterval);
+        targetCard.style.backgroundColor = '';
+      }
+    }, 400);
+    
+    setTimeout(() => {
+      targetCard.style.boxShadow = '';
+      targetCard.style.transform = '';
+      targetCard.style.borderColor = '';
+      targetCard.style.borderWidth = '';
+      targetCard.style.zIndex = '';
+      targetCard.style.backgroundColor = '';
+    }, 5000);
+    
+  } else {
+    console.log("Folder card not found, retrying...");
     setTimeout(() => {
       const cardsRetry = document.querySelectorAll('.card.folder-card');
+      console.log("Retry: Found folder cards:", cardsRetry.length);
+      
+      let foundRetry = false;
       for (let card of cardsRetry) {
-        const folderIdAttr = card.getAttribute('data-folder-id');
-        if (folderIdAttr === folderId) {
-          console.log("Found folder card on retry, scrolling...");
+        const cardFolderId = card.getAttribute('data-folder-id');
+        if (cardFolderId === folderId) {
+          console.log("Retry: Found folder card");
           card.scrollIntoView({ behavior: 'smooth', block: 'center' });
           
           card.style.transition = 'all 0.8s ease';
-          card.style.boxShadow = '0 0 0 4px #667eea, 0 8px 40px rgba(102,126,234,0.6)';
+          card.style.boxShadow = '0 0 0 4px #667eea, 0 8px 40px rgba(102,126,234,0.7)';
           card.style.transform = 'scale(1.03)';
           card.style.borderColor = '#667eea';
           card.style.borderWidth = '3px';
+          card.style.zIndex = '100';
           
           let flashCount = 0;
           const flashInterval = setInterval(() => {
             if (flashCount % 2 === 0) {
               card.style.backgroundColor = 'rgba(102,126,234,0.15)';
+              card.style.boxShadow = '0 0 0 6px #667eea, 0 8px 50px rgba(102,126,234,0.8)';
             } else {
               card.style.backgroundColor = '';
+              card.style.boxShadow = '0 0 0 4px #667eea, 0 8px 40px rgba(102,126,234,0.7)';
             }
             flashCount++;
-            if (flashCount > 5) {
+            if (flashCount > 6) {
               clearInterval(flashInterval);
               card.style.backgroundColor = '';
             }
-          }, 300);
+          }, 400);
           
           setTimeout(() => {
             card.style.boxShadow = '';
             card.style.transform = '';
             card.style.borderColor = '';
             card.style.borderWidth = '';
-          }, 4000);
+            card.style.zIndex = '';
+            card.style.backgroundColor = '';
+          }, 5000);
           
+          foundRetry = true;
           break;
         }
+      }
+      
+      if (!foundRetry) {
+        console.log("Retry failed: Folder card still not found");
       }
     }, 1000);
   }
@@ -414,14 +451,9 @@ function scrollToFolder(folderId) {
 function openFolderPage(folderId) {
   console.log("Opening folder with ID:", folderId);
   
-  // Store folder ID in both localStorage and sessionStorage
   localStorage.setItem('folderToOpen', folderId);
   sessionStorage.setItem('folderToOpen', folderId);
-  
-  // Store current category
   sessionStorage.setItem('currentCategory', currentCategory);
-  
-  // Store return folder ID for scrolling back
   sessionStorage.setItem('returnToFolder', folderId);
   
   window.location.href = 'folder.html';
@@ -499,6 +531,7 @@ function toggleTheme() {
 function checkReturnFromFolder() {
   const returnToFolder = sessionStorage.getItem('returnToFolder');
   if (returnToFolder) {
+    console.log("Returning to folder:", returnToFolder);
     const savedCategory = sessionStorage.getItem('currentCategory');
     if (savedCategory) {
       currentCategory = savedCategory;
